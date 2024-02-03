@@ -20,8 +20,10 @@ router.get("/", async (req, res)=>{
         key: process.env.MAP_KEY
       }
     });
-    console.log("response:", response.data)
-    res.json(response.data);
+    const limitedResults = response.data.results.slice(0, 5);
+
+    console.log("response:", limitedResults)
+    res.json({...response.data, results: limitedResults });
   } catch (error) {
     res.status(500).send(error.toString());
   }
