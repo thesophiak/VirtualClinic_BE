@@ -1,31 +1,40 @@
 const express = require("express");
 const router = express.Router();
+const axios = require('axios');
 
 const knex = require("knex");
 const knexConfig = require("../knexfile.js");
 const knexInstance = knex(knexConfig);
 
-// Define  routes
-// router.get("/", async (req, res) => {
-//   try {
-//     const questions = await knexInstance.select().from("clinic");
-//     res.json(questions);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
 
 // GET HISTORY LIST
 router.get("/", async (req, res)=>{
   try{
-  const historyList = await knexInstance.select("history").from("clinic");
+  const historyList = await knexInstance.select("id", "history").from("clinic");
   res.json(historyList);
 } catch (error) {
   console.error(error);
   res.status(500).json({ error: "Internal server error" });
 }
 });
+
+// GET 1 HISTORY ITEM
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const historyItem = await knexInstance("clinic").where({ id }).first();
+    
+    if (historyItem) {
+      res.json(historyItem);
+    } else {
+      res.status(404).json({ message: 'History item not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 // POST NEW ENTRY
 router.post("/", async (req, res) => {
