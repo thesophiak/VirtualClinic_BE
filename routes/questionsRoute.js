@@ -38,7 +38,6 @@ router.get("/:id", async (req, res) => {
 
 // POST NEW ENTRY
 router.post("/", async (req, res) => {
-  console.log("Request Body:", req.body);
   try {
 		const {
 			question,
@@ -52,7 +51,6 @@ router.post("/", async (req, res) => {
       answer,
 		});
 
-    console.log(result);
 		const newDataEntryId = result[0];
 		const createDataEntry = await knexInstance("clinic").where({
 			id: newDataEntryId,
